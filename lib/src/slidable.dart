@@ -260,31 +260,34 @@ class _SlidableState extends State<Slidable>
       ],
     );
 
-    return ColorsProvider(
-      backgroundColor: widget.backgroundColor,
-      foregroundColor: widget.foregroundColor,
-      child: SlidableGestureDetector(
-        enabled: widget.enabled,
-        controller: controller,
-        direction: widget.direction,
-        dragStartBehavior: widget.dragStartBehavior,
-        child: SlidableNotificationSender(
-          tag: widget.groupTag,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8.0),
+      child: ColorsProvider(
+        backgroundColor: widget.backgroundColor,
+        foregroundColor: widget.foregroundColor,
+        child: SlidableGestureDetector(
+          enabled: widget.enabled,
           controller: controller,
-          child: SlidableScrollingBehavior(
+          direction: widget.direction,
+          dragStartBehavior: widget.dragStartBehavior,
+          child: SlidableNotificationSender(
+            tag: widget.groupTag,
             controller: controller,
-            closeOnScroll: widget.closeOnScroll,
-            child: SlidableDismissal(
-              axis: flipAxis(widget.direction),
+            child: SlidableScrollingBehavior(
               controller: controller,
-              child: ActionPaneConfiguration(
-                alignment: actionPaneAlignment,
-                direction: widget.direction,
-                isStartActionPane:
-                    controller.actionPaneType.value == ActionPaneType.start,
-                child: _SlidableControllerScope(
-                  controller: controller,
-                  child: content,
+              closeOnScroll: widget.closeOnScroll,
+              child: SlidableDismissal(
+                axis: flipAxis(widget.direction),
+                controller: controller,
+                child: ActionPaneConfiguration(
+                  alignment: actionPaneAlignment,
+                  direction: widget.direction,
+                  isStartActionPane:
+                  controller.actionPaneType.value == ActionPaneType.start,
+                  child: _SlidableControllerScope(
+                    controller: controller,
+                    child: content,
+                  ),
                 ),
               ),
             ),
