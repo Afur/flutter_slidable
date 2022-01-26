@@ -131,12 +131,8 @@ class _DismissiblePaneState extends State<DismissiblePane> {
         canDismiss = await widget.confirmDismiss!();
       }
       if (canDismiss) {
-        controller!.dismiss(
-          ResizeRequest(widget.resizeDuration, widget.onDismissed),
-          duration: widget.dismissalDuration,
-        );
-      } else if (widget.closeOnCancel) {
-        controller!.close();
+        controller!.close(duration: widget.dismissalDuration);
+        widget.onDismissed.call();
       }
       return;
     }

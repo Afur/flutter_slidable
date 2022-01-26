@@ -27,6 +27,8 @@ class Slidable extends StatefulWidget {
     this.direction = Axis.horizontal,
     this.dragStartBehavior = DragStartBehavior.down,
     this.useTextDirection = true,
+    required this.foregroundColor,
+    required this.backgroundColor,
     required this.child,
   }) : super(key: key);
 
@@ -42,6 +44,10 @@ class Slidable extends StatefulWidget {
   ///
   /// Defaults to true.
   final bool closeOnScroll;
+
+  final Color foregroundColor;
+
+  final Color backgroundColor;
 
   /// {@template slidable.groupTag}
   /// The tag shared by all the [Slidable]s of the same group.
@@ -213,6 +219,7 @@ class _SlidableState extends State<Slidable>
   }
 
   ActionPane? get startActionPane => widget.startActionPane;
+
   ActionPane? get endActionPane => widget.endActionPane;
 
   Alignment get actionPaneAlignment {
@@ -253,28 +260,32 @@ class _SlidableState extends State<Slidable>
       ],
     );
 
-    return SlidableGestureDetector(
-      enabled: widget.enabled,
-      controller: controller,
-      direction: widget.direction,
-      dragStartBehavior: widget.dragStartBehavior,
-      child: SlidableNotificationSender(
-        tag: widget.groupTag,
+    return ColorsProvider(
+      backgroundColor: widget.backgroundColor,
+      foregroundColor: widget.foregroundColor,
+      child: SlidableGestureDetector(
+        enabled: widget.enabled,
         controller: controller,
-        child: SlidableScrollingBehavior(
+        direction: widget.direction,
+        dragStartBehavior: widget.dragStartBehavior,
+        child: SlidableNotificationSender(
+          tag: widget.groupTag,
           controller: controller,
-          closeOnScroll: widget.closeOnScroll,
-          child: SlidableDismissal(
-            axis: flipAxis(widget.direction),
+          child: SlidableScrollingBehavior(
             controller: controller,
-            child: ActionPaneConfiguration(
-              alignment: actionPaneAlignment,
-              direction: widget.direction,
-              isStartActionPane:
-                  controller.actionPaneType.value == ActionPaneType.start,
-              child: _SlidableControllerScope(
-                controller: controller,
-                child: content,
+            closeOnScroll: widget.closeOnScroll,
+            child: SlidableDismissal(
+              axis: flipAxis(widget.direction),
+              controller: controller,
+              child: ActionPaneConfiguration(
+                alignment: actionPaneAlignment,
+                direction: widget.direction,
+                isStartActionPane:
+                    controller.actionPaneType.value == ActionPaneType.start,
+                child: _SlidableControllerScope(
+                  controller: controller,
+                  child: content,
+                ),
               ),
             ),
           ),
@@ -337,5 +348,30 @@ class _SlidableClipper extends CustomClipper<Rect> {
   @override
   bool shouldReclip(_SlidableClipper oldClipper) {
     return oldClipper.axis != axis;
+  }
+}
+
+class ColorsProvider extends InheritedWidget {
+  const ColorsProvider({
+    Key? key,
+    required this.backgroundColor,
+    required this.foregroundColor,
+    required Widget child,
+  })  : assert(backgroundColor != null),
+        assert(foregroundColor != null),
+        assert(child != null),
+        super(key: key, child: child);
+
+  final Color backgroundColor;
+  final Color foregroundColor;
+
+  static ColorsProvider? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<ColorsProvider>();
+  }
+
+  @override
+  bool updateShouldNotify(covariant ColorsProvider oldWidget) {
+    return oldWidget.backgroundColor != backgroundColor &&
+        oldWidget.foregroundColor != foregroundColor;
   }
 }

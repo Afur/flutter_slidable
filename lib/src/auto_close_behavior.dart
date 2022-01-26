@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/src/controller.dart';
 import 'package:flutter_slidable/src/notifications.dart';
+
+import '../flutter_slidable.dart';
 
 /// A widget that forces the [Slidable] widgets below it to close when another
 /// [Slidable] widget with the same [groupTag] opens.
@@ -454,6 +457,8 @@ class _SlidableAutoCloseBarrierBehaviorListenerState
 
   @override
   Widget build(BuildContext context) {
+    final colors = ColorsProvider.of(context);
+
     return SlidableGroupBehaviorListener<SlidableAutoCloseBarrierNotification>(
       onNotification: (SlidableAutoCloseBarrierNotification notification) {
         if (widget.groupTag == notification.groupTag) {
@@ -464,11 +469,27 @@ class _SlidableAutoCloseBarrierBehaviorListenerState
           }
         }
       },
-      child: GestureDetector(
-        onTap: absorbing ? handleOnTap : null,
-        child: AbsorbPointer(
-          absorbing: absorbing,
-          child: widget.child,
+      child: Container(
+        decoration: BoxDecoration(
+          color: colors?.backgroundColor,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(8),
+            bottomRight: Radius.circular(8)
+          ),
+        ),
+        child: GestureDetector(
+          onTap: absorbing ? handleOnTap : null,
+          child: AbsorbPointer(
+            absorbing: absorbing,
+            child: Container(
+                decoration: BoxDecoration(
+                  color: colors?.foregroundColor,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(8),
+                  ),
+                ),
+                child: widget.child),
+          ),
         ),
       ),
     );

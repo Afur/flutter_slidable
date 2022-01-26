@@ -19,6 +19,8 @@ class MyApp extends StatelessWidget {
               // Specify a key if the Slidable is dismissible.
               key: const ValueKey(0),
 
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.blue,
               // The start action pane is the one at the left or the top side.
               startActionPane: ActionPane(
                 // A motion is a widget used to control how the pane animates.
@@ -36,13 +38,6 @@ class MyApp extends StatelessWidget {
                     foregroundColor: Colors.white,
                     icon: Icons.delete,
                     label: 'Delete',
-                  ),
-                  SlidableAction(
-                    onPressed: doNothing,
-                    backgroundColor: Color(0xFF21B7CA),
-                    foregroundColor: Colors.white,
-                    icon: Icons.share,
-                    label: 'Share',
                   ),
                 ],
               ),
@@ -78,6 +73,8 @@ class MyApp extends StatelessWidget {
               // Specify a key if the Slidable is dismissible.
               key: const ValueKey(1),
 
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.blue,
               // The start action pane is the one at the left or the top side.
               startActionPane: const ActionPane(
                 // A motion is a widget used to control how the pane animates.
